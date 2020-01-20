@@ -58,7 +58,19 @@ describe.each([
       link: new HttpLink({
         uri: '/graphql',
       }),
-      cache: new Cache(),
+      cache: new Cache({
+        typePolicies: {
+          Query: {
+            fields: {
+              foo: {
+                merge(a, b) {
+                  return { ...a, ...b };
+                }
+              }
+            }
+          }
+        } 
+      }),
     });
 
     const barResult = await client.query({ query: BarQuery, } );
